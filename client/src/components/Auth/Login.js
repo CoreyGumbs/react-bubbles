@@ -30,8 +30,6 @@ const Login = ({location, history, match}) => {
         })
     }
 
-    console.log(auth);
-    console.log(location, history, match);
     return(
         <div className="login-container">
             <form action="" className="login-form" onSubmit={handleSubmit}>
