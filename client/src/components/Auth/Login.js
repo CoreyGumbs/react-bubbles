@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import './login.css';
 
-const Login = () => {
+const Login = ({location, history, match}) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const [auth, setAuth] = useState({ username: '', password: ''});
@@ -13,10 +13,28 @@ const Login = () => {
         setAuth({...auth, [e.target.name]: e.target.value});
     }
 
+    const handleSubmit = e => {
+        e.preventDefault();
+        setIsLoading(!isLoading);
+
+        axios.post(`http://localhost:5000/api/login`, auth)
+        .then(res => {
+            localStorage.setItem('token', res.payload);
+            setIsLoading(!isLoading);
+            console.log(res);
+            history.push('/bubbles');
+        })
+        .catch(err => {
+            setError(err);
+            console.log(err);
+        })
+    }
+
     console.log(auth);
+    console.log(location, history, match);
     return(
         <div className="login-container">
-            <form action="" className="login-form">
+            <form action="" className="login-form" onSubmit={handleSubmit}>
                 <div className="login-input-container">
                     <label htmlFor="" className="login-label">
                         Username:
