@@ -19,7 +19,7 @@ const Login = ({location, history, match}) => {
 
         axios.post(`http://localhost:5000/api/login`, auth)
         .then(res => {
-            localStorage.setItem('token', res.payload);
+            localStorage.setItem('token', res.data.payload);
             setIsLoading(!isLoading);
             console.log(res);
             history.push('/bubbles');
