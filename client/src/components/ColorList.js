@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
+
+import { axiosWithAuth } from "../utils/axiosAuth";
 
 const initialColor = {
   color: "",
@@ -7,26 +8,43 @@ const initialColor = {
 };
 
 const ColorList = ({ colors, updateColors }) => {
-  console.log(colors);
   const [editing, setEditing] = useState(false);
   const [colorToEdit, setColorToEdit] = useState(initialColor);
+  const [newColor, setNewColor] = useState(initialColor);
 
   const editColor = color => {
     setEditing(true);
     setColorToEdit(color);
   };
 
+
+
   const saveEdit = e => {
-    e.preventDefault();
+    console.log(colorToEdit);
+
     // Make a put request to save your updated color
     // think about where will you get the id from...
     // where is is saved right now?
+    axiosWithAuth().put(`api/colors/${colorToEdit.id}`, colorToEdit)
+    .then(res => {
+    
+      console.log(res);
+    })
+    .catch(err => console.log(err));
   };
+
 
   const deleteColor = color => {
     // make a delete request to delete this color
+    axiosWithAuth().delete(`api/colors/${color.id}`)
+    .then(res => {
+      console.log('Delete: ', res);
+    })
+    .catch(err => console.log(err));
+    console.log(color);
   };
 
+  console.log(newColor);
   return (
     <div className="colors-wrap">
       <p>colors</p>
@@ -81,7 +99,17 @@ const ColorList = ({ colors, updateColors }) => {
         </form>
       )}
       <div className="spacer" />
-      {/* stretch - build another form here to add a color */}
+              <form>
+                <legend>Add Color: </legend>
+                <label htmlFor="">
+                  color name: 
+                  <input type="text" onChange={e => setNewColor({...newColor, color:e.target.value})}/>
+                  </label>
+                  <label htmlFor="">
+                    hex code: 
+                    <input type="text"/>
+                  </label>
+              </form>
     </div>
   );
 };
